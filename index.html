@@ -18,6 +18,7 @@
           <strong>Diet and Health</strong>
         </div>
         <div class="top-links">
+          <a href="#results">Results</a>
           <a href="#report">Report</a>
           <a href="#model">Model</a>
           <a href="#steps">Workflow</a>
@@ -64,7 +65,15 @@
 
           <article class="report-card">
             <h3>Results and Discussion</h3>
-            <p>placeholder</p>
+            <p>
+              The original Keller-Segel model fits the LOW density wave well but over-predicts
+              band sharpness at HIGH and EXT density. Replacing constant χ with
+              χ(B) = χ₀/(1 + B/B<sub>th</sub>) fixes all four density groups simultaneously
+              (B<sub>th</sub> ≈ 8.8 OD). Forward PDE simulation from real initial conditions
+              reproduces the measured wave speed (~0.28 mm/min). Adding a suicidal chemotaxis
+              term toward an antibiotic disrupts the wave above the MIC; density-dependent χ
+              provides partial protection at high density by reducing antibiotic attraction.
+            </p>
           </article>
 
           <article class="report-card references-card">
@@ -174,7 +183,7 @@
         </div>
         <div class="media-grid">
           <div class="media-frame">
-            <img src="step5_2d_chemotaxis.gif" alt="2D chemotaxis animation with bacteria, food, and antibiotic">
+            <img src="figures/step5_2d_chemotaxis.gif" alt="2D chemotaxis animation with bacteria, food, and antibiotic">
           </div>
           <div class="media-copy">
             <p>
@@ -185,6 +194,172 @@
               The website below adds an interactive browser-based playground so we can tune the
               strengths of food attraction, antibiotic attraction, and antibiotic death live.
             </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="results" class="section results-section">
+        <div class="section-head">
+          <p class="eyebrow">Results</p>
+          <h2>What the model tells us</h2>
+        </div>
+
+        <!-- Result 1 -->
+        <div class="result-block">
+          <div class="result-fig">
+            <img src="figures/fig2_ks_vs_data.png" alt="Experimental wave profiles across four density groups">
+          </div>
+          <div class="result-text">
+            <p class="result-label">Result 1 &mdash; Experimental data</p>
+            <h3>Bacterial waves broaden at high density</h3>
+            <p>
+              Mean bacterial density B(z) and aspartate concentration A(z) profiles for the four
+              experimental groups (LOW &rarr; EXT). Shaded bands show &plusmn;1 standard deviation.
+              The coordinate <em>z</em> is in the co-moving frame, so <em>z</em>&nbsp;=&nbsp;0 always
+              marks the bacterial peak.
+            </p>
+            <p>
+              At LOW density the band is narrow and sharply peaked; the aspartate profile shows a
+              clean depletion zone behind the wave. As density increases the peak broadens and
+              flattens. At EXT density the band is roughly twice as wide, and aspartate depletion
+              behind the wave is less complete. This broadening is the central experimental
+              observation the original model cannot reproduce.
+            </p>
+          </div>
+        </div>
+
+        <!-- Result 2 -->
+        <div class="result-block result-block-flip">
+          <div class="result-fig">
+            <img src="figures/fig2_ks_overlay.png" alt="Original KS model overlay on data">
+          </div>
+          <div class="result-text">
+            <p class="result-label">Result 2 &mdash; Original Keller-Segel model</p>
+            <h3>Constant &chi; fits LOW density but fails at HIGH and EXT</h3>
+            <p>
+              The original KS model (dashed orange) uses a constant chemotactic sensitivity
+              &chi;&nbsp;=&nbsp;0.0033&nbsp;mm&sup2;/s fitted to the LOW density data. It gives an
+              excellent fit at LOW density but systematically over-predicts band sharpness at higher
+              densities, producing a narrow tall peak where the data show a broad flat distribution.
+            </p>
+            <p>
+              The rate-of-change diagnostic (below) confirms the problem: the model&rsquo;s
+              right-hand side is much larger in magnitude than the measured &part;B/&part;t at HIGH
+              and EXT density, pointing directly to &chi; as the parameter that needs correcting.
+            </p>
+            <div class="result-fig-inline">
+              <img src="figures/fig2_ks_roc.png" alt="Rate-of-change diagnostic for original KS model">
+              <p class="fig-caption">Rate-of-change diagnostic: model RHS (orange) vs measured &part;B/&part;t (blue).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Result 3 -->
+        <div class="result-block">
+          <div class="result-fig">
+            <img src="figures/fig3_comparison.png" alt="Modified KS model comparison across all density groups">
+          </div>
+          <div class="result-text">
+            <p class="result-label">Result 3 &mdash; Modified Keller-Segel model</p>
+            <h3>Density-dependent &chi;(B) fixes all four groups simultaneously</h3>
+            <p>
+              Replacing constant &chi; with &chi;(B)&nbsp;=&nbsp;&chi;<sub>0</sub>&nbsp;/&nbsp;(1&nbsp;+&nbsp;B/B<sub>th</sub>)
+              dramatically improves the fit at all densities (green dashed line). Crowded bacteria
+              follow the gradient less aggressively because their effective sensitivity is reduced.
+              The half-saturation density B<sub>th</sub>&nbsp;&asymp;&nbsp;8.8&nbsp;OD means that at
+              EXT density the chemotactic sensitivity is roughly halved compared to the dilute limit.
+            </p>
+            <p>
+              Crucially, the LOW density fit is preserved: when B&nbsp;&laquo;&nbsp;B<sub>th</sub>
+              the correction factor is close to 1 and the model reduces to the original KS equation.
+              The density-dependent term unifies behaviour across all four conditions with a single
+              parameter set.
+            </p>
+            <div class="result-fig-inline">
+              <img src="figures/fig3_modified_ks_roc.png" alt="Rate-of-change diagnostic for modified KS model">
+              <p class="fig-caption">Modified model RHS (green) now closely tracks measured &part;B/&part;t at all densities.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Result 4 -->
+        <div class="result-block result-block-flip">
+          <div class="result-fig">
+            <img src="figures/fig4_simulation.png" alt="Forward PDE simulation snapshots">
+          </div>
+          <div class="result-text">
+            <p class="result-label">Result 4 &mdash; Forward PDE simulation</p>
+            <h3>The model predicts realistic wave propagation from real initial conditions</h3>
+            <p>
+              Starting from the experimentally measured LOW density profiles, the modified model
+              produces a self-sustaining travelling wave. Over five minutes the bacterial band moves
+              approximately 1.4&nbsp;mm to the right, consistent with the measured wave speed of
+              ~0.28&nbsp;mm/min for the LOW density group.
+            </p>
+            <p>
+              The aspartate profile evolves as expected: the region behind the wave becomes
+              progressively depleted while the region ahead remains at its initial high concentration.
+              The peak height stays approximately constant (~0.70&nbsp;OD), indicating the wave is
+              close to a travelling-wave steady state.
+            </p>
+          </div>
+        </div>
+
+        <!-- Result 5 -->
+        <div class="result-block">
+          <div class="result-fig">
+            <img src="figures/fig_step5_antibiotic_extension.png" alt="Antibiotic extension disrupting the travelling wave">
+          </div>
+          <div class="result-text">
+            <p class="result-label">Result 5 &mdash; Antibiotic extension (Step 5)</p>
+            <h3>Suicidal chemotaxis disrupts the wave; density-dependent &chi; is protective</h3>
+            <p>
+              Adding an antibiotic field ahead of the bacterial wave, with bacteria attracted toward
+              it (motivated by suicidal chemotaxis in <em>Pseudomonas aeruginosa</em>, Oliveira et al.
+              2022), disrupts the wave above the MIC. Bacteria at the leading edge enter the killing
+              zone and are eliminated, slowing or halting wave propagation.
+            </p>
+            <p>
+              At sub-MIC concentrations the wave is only weakly perturbed. Importantly,
+              density-dependent &chi; provides partial protection at high density: crowded bacteria
+              are less strongly attracted to the antibiotic, so fewer enter the killing zone. The
+              same mechanism that broadens the wave at high density also inadvertently reduces
+              suicidal antibiotic attraction.
+            </p>
+            <div class="result-fig-inline">
+              <img src="figures/step5_antibiotic_animation.gif" alt="Animation of antibiotic disruption">
+              <p class="fig-caption">Time evolution showing the bacterial band (green) eroding as it reaches the antibiotic zone (red).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary table -->
+        <div class="results-summary">
+          <h3>Summary</h3>
+          <div class="summary-table">
+            <div class="summary-row summary-header">
+              <span>Step</span><span>Key finding</span>
+            </div>
+            <div class="summary-row">
+              <span class="step-badge">1 &mdash; Data</span>
+              <span>Waves broaden and flatten as density increases; wave speed is approximately constant (~0.28&nbsp;mm/min) across all groups.</span>
+            </div>
+            <div class="summary-row">
+              <span class="step-badge">2 &mdash; Original KS</span>
+              <span>Constant &chi; fits LOW density well but over-predicts band sharpness at HIGH and EXT density.</span>
+            </div>
+            <div class="summary-row">
+              <span class="step-badge">3 &mdash; Modified KS</span>
+              <span>&chi;(B)&nbsp;=&nbsp;&chi;<sub>0</sub>/(1&nbsp;+&nbsp;B/B<sub>th</sub>) fixes all four density groups simultaneously, with B<sub>th</sub>&nbsp;&asymp;&nbsp;8.8&nbsp;OD.</span>
+            </div>
+            <div class="summary-row">
+              <span class="step-badge">4 &mdash; Simulation</span>
+              <span>Forward integration from real initial conditions reproduces the observed wave speed and shape.</span>
+            </div>
+            <div class="summary-row">
+              <span class="step-badge">5 &mdash; Antibiotic</span>
+              <span>Suicidal chemotaxis disrupts the wave above the MIC. Density-dependent &chi; reduces antibiotic attraction at high density, providing partial protection.</span>
+            </div>
           </div>
         </div>
       </section>
