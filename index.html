@@ -59,7 +59,8 @@
             <a href="#intro">Introduction</a>
             <a href="#model">Model</a>
             <a href="#report-methods">Methods</a>
-            <a href="#report-results">Results &amp; Discussion</a>
+            <a href="#report-results">Results</a>
+            <a href="#report-discussion">Discussion</a>
             <a href="#refs">References</a>
           </div>
 
@@ -257,7 +258,7 @@
             </article>
 
             <article id="report-results" class="report-section">
-              <h3>Results and Discussion</h3>
+              <h3>Results</h3>
 
               <div class="result-block-stacked">
                 <div class="result-fig">
@@ -371,6 +372,57 @@
               </div>
 
             </article>
+
+            <article id="report-discussion" class="report-section">
+              <h3>Discussion</h3>
+
+              <p>
+                Our project highlights three key aspects of bacterial behaviour: how chemotaxis can be modelled, how it changes with population density, and how it is altered in the presence of antibiotics. Together, these results show that bacterial movement is not fixed, but strongly depends on both environmental conditions and collective effects.
+              </p>
+              <p>
+                The classical Keller–Segel model captures basic features such as band formation (Keller & Segel, 1971), but its limitations become clear at higher densities. As bacterial density increases, the assumption of constant chemotactic sensitivity breaks down, and responses become weaker and more regulated. This is consistent with experimental findings showing that bacterial chemotaxis becomes nonlinear at high densities due to crowding and receptor saturation (Phan et al., 2024).
+              </p>
+              <p>
+                The most interesting result comes from the presence of antibiotics. Instead of avoiding harmful conditions, bacteria can move toward antibiotic gradients and enter regions where they cannot survive. This behaviour, known as suicidal chemotaxis, has been observed experimentally and suggests that bacterial sensing is not always aligned with survival outcomes (Oliveira et al., 2022). It also indicates that antibiotics in natural environments may act as cues linked to microbial competition, rather than purely as lethal agents (). 
+              </p>
+              <p>
+                These findings have broader implications for understanding bacterial behaviour in real environments. Bacteria are often exposed to both nutrients and antibiotics at the same time, meaning their movement reflects a balance between growth and survival. In this sense, bacterial diet is not determined only by nutrient availability, but also by whether accessing those nutrients exposes them to harmful conditions.
+              </p>
+              <p>
+                This is especially relevant for the rising problem of antimicrobial resistance. If bacteria actively move toward antibiotic-rich regions, this changes how populations are exposed to antibiotics and how selection pressures act on them. Spatial exposure to antibiotics has been shown to influence bacterial survival and adaptation (Greulich et al., 2012; Hermsen et al., 2012), and movement-driven exposure may further shape these dynamics.
+              </p>
+              <p>
+                Overall, this work shows that chemotaxis is not simply movement toward food, but a process influenced by density, environmental structure, and competing signals. Understanding this helps connect bacterial movement, diet, and health, and provides insight into how bacterial populations behave in complex and realistic environments.
+              </p>
+
+              <div class="summary-box">
+                <h3>Summary of findings</h3>
+                <div class="summary-table">
+                  <div class="summary-row summary-header">
+                    <span>Result</span><span>Key finding</span>
+                  </div>
+                  <div class="summary-row">
+                    <span>1 - Original KS model</span>
+                    <span>The standard model works at low density but fails at high density, over-predicting the sharpness of the bacterial band.</span>
+                  </div>
+                  <div class="summary-row">
+                    <span>2 - Modified model</span>
+                    <span>Making chemotactic sensitivity decrease with crowding fixes the model for all four density groups simultaneously.</span>
+                  </div>
+                  <div class="summary-row">
+                    <span>3 - Simulation</span>
+                    <span>Running the fixed model forward in time reproduces the correct band shape and wave speed of ~0.28 mm/min.</span>
+                  </div>
+                  <div class="summary-row">
+                    <span>4 - Antibiotics</span>
+                    <span>When bacteria swim toward antibiotics they get killed and the band breaks down. Dense colonies are harder to disrupt because crowding already reduces their chemotactic response.</span>
+                  </div>
+                </div>
+              </div>
+
+            </article>
+
+            <article id="refs" class="report-section">
               <h3>References</h3>
               <ol class="ref-list">
                 <li>Phan, T. V. et al. (2024). Bacterial density-dependent chemotaxis in a microfluidic channel. <em>Physical Review Letters</em>.</li>
