@@ -57,7 +57,7 @@
           <div class="report-toc">
             <p class="toc-label">Contents</p>
             <a href="#intro">Introduction</a>
-            <a href="#methods">Methods</a>
+            <a href="#model">Model</a>
             <a href="#report-results">Results &amp; Discussion</a>
             <a href="#refs">References</a>
           </div>
@@ -84,61 +84,126 @@
               </p>
             </article>
 
-            <article id="methods" class="report-section">
-              <h3>Methods</h3>
+            <article id="model" class="report-section">
+              <h3>Model</h3>
 
-              <h4>Experimental data</h4>
+              <h4>State variables</h4>
               <p>
-                We used the processed dataset from Phan et al. (2024), which contains mean
-                bacterial density profiles B(z) and aspartate concentration profiles A(z) for
-                four density groups: LOW (~0.1–0.3 OD), MID (~3.0–3.3 OD), HIGH (~6.2–6.7 OD),
-                and EXT (~7.6–8.3 OD). The coordinate z is in the co-moving frame, so z = 0
-                always marks the peak of the bacterial band.
-              </p>
-
-              <h4>The Keller-Segel model</h4>
-              <p>
-                The standard KS model describes the time evolution of bacterial density B and
-                aspartate concentration A:
+                The model tracks two fields as functions of position z (mm) and time t (s).
+                The coordinate z is in the co-moving frame, so z = 0 always marks the peak of
+                the bacterial band. Negative z is behind the band (depleted food), positive z
+                is ahead (fresh food).
               </p>
               <div class="equation-block">
-                <p>∂B/∂t = D<sub>b</sub> ∂²B/∂z² − ∂/∂z [χ · B · ∂Φ/∂z] + α B</p>
+                <p>B(z, t): bacterial density [OD]</p>
+                <p>A(z, t): aspartate concentration [µM]</p>
+                <p>C(z, t): antibiotic concentration [µM] (our extension)</p>
+              </div>
+
+              <h4>The perceived signal</h4>
+              <p>
+                Bacteria do not respond to raw aspartate concentration. They respond to a
+                logarithmic version of it.
+              </p>
+              <div class="equation-block">
+                <p>Φ<sub>A</sub> = ln(1 + A / K<sub>i</sub>)</p>
+              </div>
+              <p>
+                K<sub>i</sub> = 1.0 µM is the chemotactic signal threshold. When A is much
+                smaller than K<sub>i</sub>, the signal is approximately proportional to A.
+                When A is much larger than K<sub>i</sub>, the signal grows only logarithmically
+                and the bacteria become less sensitive to further increases.
+              </p>
+
+              <h4>The original Keller-Segel equations</h4>
+              <p>
+                The standard KS model couples two PDEs. The bacterial equation has three terms:
+                random spreading (diffusion), directed movement toward food (chemotaxis), and
+                reproduction (growth).
+              </p>
+              <div class="equation-block">
+                <p>∂B/∂t = D<sub>b</sub> ∂²B/∂z² − ∂/∂z [χ · B · ∂Φ<sub>A</sub>/∂z] + α B</p>
+              </div>
+              <p>
+                D<sub>b</sub> = 0.0004 mm²/s is the bacterial diffusion coefficient, measuring how fast
+                bacteria spread by random swimming. χ = 0.0033 mm²/s is the chemotactic
+                sensitivity, measuring how strongly bacteria bias their motion toward the food gradient.
+                In the original model χ is a constant, meaning every bacterium responds equally
+                regardless of crowding. α = 1.11×10⁻⁴ s⁻¹ is the growth rate.
+              </p>
+              <p>
+                The aspartate equation has two terms: diffusion and Michaelis-Menten consumption
+                by bacteria.
+              </p>
+              <div class="equation-block">
                 <p>∂A/∂t = D<sub>A</sub> ∂²A/∂z² − γ · B · A / (A + A<sub>th</sub>)</p>
-                <p>Φ = ln(1 + A / K<sub>i</sub>)</p>
               </div>
               <p>
-                The first equation says bacteria spread by diffusion, drift up the perceived food
-                gradient (χ term), and grow at rate α. The second equation says aspartate diffuses
-                and is consumed by bacteria following Michaelis-Menten kinetics. The perceived
-                signal Φ is logarithmic, reflecting Weber's law: bacteria are more sensitive to
-                gradients when background concentration is low.
+                D<sub>A</sub> = 0.00080 mm²/s is the aspartate diffusion coefficient.
+                γ = 0.51 µM/(OD·s) is the consumption rate per unit bacterial density.
+                A<sub>th</sub> = 7.6 µM is the Michaelis-Menten half-saturation constant,
+                the aspartate concentration at which consumption is at half its maximum rate.
+                The Michaelis-Menten form captures the fact that bacteria cannot eat infinitely
+                fast even when food is abundant.
               </p>
 
-              <h4>Density-dependent correction</h4>
+              <h4>Density-dependent correction (Phan et al. 2024)</h4>
               <p>
-                Following Phan et al. (2024), we replaced the constant chemotactic sensitivity χ
-                with a density-dependent form:
+                The original model fails at high density because it assumes constant χ. Following
+                Phan et al. (2024), we replace χ with a density-dependent form:
               </p>
               <div class="equation-block">
-                <p>χ(B) = χ<sub>0</sub> / (1 + B / B<sub>th</sub>)</p>
+                <p>χ(B) = χ<sub>0</sub> / (1 + B / B<sub>h</sub>)</p>
               </div>
               <p>
-                This means crowded bacteria respond less strongly to the food gradient. The
-                parameter B<sub>th</sub> ≈ 8.8 OD is the density at which sensitivity is halved.
-                At low density the model reduces to the original KS equation.
-              </p>
-
-              <h4>Antibiotic extension</h4>
-              <p>
-                We added a third variable C(z,t) for antibiotic concentration and a second
-                chemotaxis term pointing toward the antibiotic, motivated by Oliveira et al. (2022):
+                χ<sub>0</sub> = 0.0038 mm²/s is the maximum sensitivity at zero density.
+                B<sub>h</sub> = 6.8 OD is the half-saturation density: when B equals B<sub>h</sub>,
+                the sensitivity is halved. When bacteria are packed tightly together they interfere
+                with each other's ability to sense the food gradient, due to physical crowding,
+                receptor saturation, or quorum-sensing signals. The consumption rate is also
+                modified:
               </p>
               <div class="equation-block">
-                <p>∂B/∂t = D<sub>b</sub> ∂²B/∂z² − ∂/∂z [χ<sub>A</sub>(B) · B · ∂Φ<sub>A</sub>/∂z] − ∂/∂z [χ<sub>C</sub>(B,C) · B · ∂Φ<sub>C</sub>/∂z] + α B − μ(C) B</p>
+                <p>γ(B) = γ<sub>0</sub> / (1 + B / B<sub>c</sub>)</p>
+              </div>
+              <p>
+                γ<sub>0</sub> = 0.53 µM/(OD·s) and B<sub>c</sub> = 5.1 OD. At high density,
+                bacteria consume aspartate more slowly per cell, possibly because they compete
+                for the same food molecules.
+              </p>
+
+              <h4>Antibiotic extension (our Step 5)</h4>
+              <p>
+                We add a third field C(z,t) for antibiotic concentration and a second chemotaxis
+                term pointing toward the antibiotic, motivated by Oliveira et al. (2022). The
+                antibiotic attraction and killing only activate near the minimum inhibitory
+                concentration (MIC = 0.70 µM), modelled with a Hill activation function:
+              </p>
+              <div class="equation-block">
+                <p>H(C) = C<sup>n</sup> / (C<sup>n</sup> + MIC<sup>n</sup>),&nbsp;&nbsp; n = 4</p>
+              </div>
+              <p>
+                The full bacterial equation with antibiotic becomes:
+              </p>
+              <div class="equation-block">
+                <p>∂B/∂t = D<sub>b</sub> ∂²B/∂z²</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;− ∂/∂z [χ<sub>A</sub>(B) · B · ∂Φ<sub>A</sub>/∂z]&nbsp;&nbsp; (food attraction)</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;− ∂/∂z [χ<sub>C</sub>(B,C) · B · ∂Φ<sub>C</sub>/∂z]&nbsp;&nbsp; (antibiotic attraction)</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;+ α B&nbsp;&nbsp; (growth)</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;− μ(C) · B&nbsp;&nbsp; (killing)</p>
+              </div>
+              <p>
+                The antibiotic chemotactic sensitivity χ<sub>C</sub>(B,C) = χ<sub>C0</sub> · H(C) / (1 + B/B<sub>th</sub>)
+                ensures attraction only turns on near the MIC and is suppressed by crowding.
+                The killing rate μ(C) = μ<sub>max</sub> · H(C) · C/(C + MIC) increases with
+                antibiotic concentration but cannot exceed μ<sub>max</sub> = 0.30 s⁻¹.
+                The antibiotic field evolves as:
+              </p>
+              <div class="equation-block">
                 <p>∂C/∂t = D<sub>C</sub> ∂²C/∂z² − κ B C</p>
               </div>
               <p>
-                The killing rate μ(C) activates above the minimum inhibitory concentration (MIC).
+                where κ = 0.18 OD⁻¹s⁻¹ is the rate at which bacteria absorb the antibiotic.
               </p>
 
               <h4>Numerical implementation</h4>
@@ -148,6 +213,7 @@
                 the stability condition dt &lt; dz² / (2D). No-flux boundary conditions were
                 applied at both ends of the channel.
               </p>
+              
             </article>
 
             <article id="report-results" class="report-section">
@@ -157,7 +223,7 @@
 
               <div class="result-block" style="margin-top:40px;">
                 <div class="result-fig">
-                  <img src="fig2_ks_vs_data.png" alt="Classical Keller-Segel model reproduces chemotactic band formation but fails at high density">
+                  <img src="figures\fig2_ks_vs_data.png" alt="Classical Keller-Segel model reproduces chemotactic band formation but fails at high density">
                 </div>
                 <div class="result-text">
                   <p class="result-label">Figure 1</p>
@@ -165,14 +231,14 @@
                   <p>We first simulated the classical Keller-Segel (KS) model to evaluate its ability to reproduce experimentally observed bacterial distributions across four density regimes (LOW, MID, HIGH, EXT). The experimental data showed a clear density-dependent trend: as initial bacterial density increased, the peak bacterial density at the band front rose sharply, reaching OD ≈ 5 in the EXT group, while the aspartate gradient steepened as higher-density populations depleted nutrient more rapidly behind the advancing front .</p>
                   <p>At low density, the model closely matched the data - the bacterial peak was broad and low-amplitude, and the rate-of-change profiles (∂B/∂t) were small and roughly symmetric, reflecting weak chemotactic flux. As density increased, though, the cracks started to show. At HIGH and EXT densities, the model significantly overestimated both the magnitude and sharpness of the chemotactic response. In the EXT group specifically, the predicted ∂B/∂t peak was roughly twice the observed value, and the spatial profile was much broader than what the data showed. This makes it clear that constant chemotactic sensitivity χ is not a reasonable assumption once bacterial density gets high.</p>
                   <div class="result-fig-inline">
-                    <img src="fig2_ks_roc.png" alt="ks_vs_data">
+                    <img src="figures/fig2_ks_roc.png" alt="ks_vs_data">
                   </div>
                 </div>
               </div>
 
               <div class="result-block">
                 <div class="result-fig">
-                  <img src="fig3_comparison.png" alt="Density-dependent modification improves agreement across all regimes">
+                  <img src="figures\fig3_comparison.png" alt="Density-dependent modification improves agreement across all regimes">
                 </div>
                 <div class="result-text">
                   <p class="result-label">Figure 2 </p>
@@ -184,7 +250,7 @@
 
               <div class="result-block">
                 <div class="result-fig">
-                  <img src="fig4_simulation.png" alt="Simulations reproduce travelling wave propagation and self-generated attractant depletion">
+                  <img src="figures/fig4_simulation.png" alt="Simulations reproduce travelling wave propagation and self-generated attractant depletion">
                 </div>
                 <div class="result-text">
                   <p class="result-label">Figure 3</p>
@@ -195,7 +261,7 @@
 
               <div class="result-block result-block-flip">
                 <div class="result-fig">
-                  <img src="fig_step5_antibiotic_extension.png" alt="Antibiotic extension introduces competing chemotactic signals">
+                  <img src="figures\fig_step5_antibiotic_extension.png" alt="Antibiotic extension introduces competing chemotactic signals">
                 </div>
                 <div class="result-text">
                   <p class="result-label">Figure 4</p>
@@ -206,7 +272,7 @@
 
              <!-- <div class="result-block">
                 <div class="result-fig">
-                  <img src="fig_ks_toy_band.png" alt="Experimental wave profiles across four density groups">
+                  <img src="figures/fig_ks_toy_band.png" alt="Experimental wave profiles across four density groups">
                 </div>
                 <div class="result-text">
                   <p class="result-label">Figure 3 - Experimental data</p>
@@ -218,7 +284,7 @@
 
               <div class="result-block result-block-flip">
                 <div class="result-fig">
-                  <img src="fig2_ks_overlay.png" alt="Original KS model overlay on data">
+                  <img src="figures/fig2_ks_overlay.png" alt="Original KS model overlay on data">
                 </div>
                 <div class="result-text">
                   <p class="result-label">Figure 4 - Original model vs data</p>
@@ -227,14 +293,14 @@
                   <p>The reason is that the original model assumes every bacterium chases the food gradient with the same strength regardless of how many neighbours it has. In reality, when bacteria are packed tightly together, they interfere with each other and respond less strongly to the gradient. The model has no way to know this, so it over-predicts how sharply the bacteria concentrate.</p>
                   <p class="fig-caption">The smaller diagnostic plot below checks this more rigorously. It compares the rate at which the bacterial density is actually changing over time (measured directly from the data) against what the model says that rate should be. At LOW density the two match. At HIGH and EXT density the model's predicted rate is several times larger than the measured rate, confirming that the model is driving the chemotaxis far too hard.</p>
                   <div class="result-fig-inline">
-                    <img src="fig2_ks_roc.png" alt="Rate-of-change diagnostic">
+                    <img src="figures/fig2_ks_roc.png" alt="Rate-of-change diagnostic">
                   </div>
                 </div>
               </div>
 
               <div class="result-block result-block-flip">
                 <div class="result-fig">
-                  <img src="fig4_simulation.png" alt="Forward PDE simulation snapshots">
+                  <img src="figures/fig4_simulation.png" alt="Forward PDE simulation snapshots">
                 </div>
                 <div class="result-text">
                   <p class="result-label">Figure 6 - Forward simulation</p>
@@ -422,7 +488,7 @@
         </div>
         <div class="media-grid">
           <div class="media-frame">
-            <img src="step5_2d_chemotaxis.gif" alt="2D chemotaxis animation with bacteria, food, and antibiotic">
+            <img src="figures/step5_2d_chemotaxis.gif" alt="2D chemotaxis animation with bacteria, food, and antibiotic">
           </div>
           <div class="media-copy">
             <p>The animation on the left comes from the Step 5 particle-field model. Food is shown in green, antibiotic in purple, and bacteria as moving dots.</p>
