@@ -58,6 +58,7 @@
             <p class="toc-label">Contents</p>
             <a href="#intro">Introduction</a>
             <a href="#model">Model</a>
+            <a href="#report-methods">Methods</a>
             <a href="#report-results">Results &amp; Discussion</a>
             <a href="#refs">References</a>
           </div>
@@ -216,108 +217,106 @@
               
             </article>
 
+            <article id="report-methods" class="report-section">
+              <h3>Methods</h3>
+
+              <h4>Experimental data</h4>
+              <p>
+                We used the processed dataset from Phan et al. (2024), which contains mean
+                bacterial density profiles B(z) and aspartate concentration profiles A(z) for
+                four density groups: LOW (~0.1-0.3 OD), MID (~3.0-3.3 OD), HIGH (~6.2-6.7 OD),
+                and EXT (~7.6-8.3 OD). The coordinate z is in the co-moving frame, so z = 0
+                always marks the peak of the bacterial band.
+              </p>
+
+              <h4>Model fitting</h4>
+              <p>
+                Parameters for the original KS model were fitted to the LOW density group.
+                Parameters for the modified model were fitted simultaneously to all four density
+                groups. The rate-of-change diagnostic compared the model right-hand side against
+                the measured temporal derivative of bacterial density, providing a direct test
+                of each term in the PDE.
+              </p>
+
+              <h4>Forward simulation</h4>
+              <p>
+                The full coupled PDE system was integrated forward in time using explicit Euler
+                time-stepping on a 300-point spatial grid (dz = 0.02 mm). Initial conditions
+                were taken from the experimentally measured LOW density profiles, interpolated
+                onto the coarser simulation grid. No-flux boundary conditions were applied at
+                both ends of the channel.
+              </p>
+
+              <h4>Antibiotic extension</h4>
+              <p>
+                The antibiotic field was initialised as a Gaussian patch ahead of the bacterial
+                band. Parameters for the antibiotic chemotaxis and killing terms were chosen
+                to be consistent with the order-of-magnitude estimates from Oliveira et al.
+                (2022). The MIC was set to 0.70 µM.
+              </p>
+            </article>
+
             <article id="report-results" class="report-section">
               <h3>Results and Discussion</h3>
 
-              <!-- ── Figures ── -->
-
-              <div class="result-block" style="margin-top:40px;">
+              <div class="result-block-stacked">
                 <div class="result-fig">
-                  <img src="fig2_ks_vs_data.png" alt="Classical Keller-Segel model reproduces chemotactic band formation but fails at high density">
+                  <img src="figures/fig2_ks_vs_data.png" alt="Classical Keller-Segel model reproduces chemotactic band formation but fails at high density">
                 </div>
                 <div class="result-text">
                   <p class="result-label">Figure 1</p>
                   <h3>Classical Keller-Segel model reproduces chemotactic band formation but fails at high density</h3>
-                  <p>We first simulated the classical Keller-Segel (KS) model to evaluate its ability to reproduce experimentally observed bacterial distributions across four density regimes (LOW, MID, HIGH, EXT). The experimental data showed a clear density-dependent trend: as initial bacterial density increased, the peak bacterial density at the band front rose sharply, reaching OD ≈ 5 in the EXT group, while the aspartate gradient steepened as higher-density populations depleted nutrient more rapidly behind the advancing front .</p>
-                  <p>At low density, the model closely matched the data - the bacterial peak was broad and low-amplitude, and the rate-of-change profiles (∂B/∂t) were small and roughly symmetric, reflecting weak chemotactic flux. As density increased, though, the cracks started to show. At HIGH and EXT densities, the model significantly overestimated both the magnitude and sharpness of the chemotactic response. In the EXT group specifically, the predicted ∂B/∂t peak was roughly twice the observed value, and the spatial profile was much broader than what the data showed. This makes it clear that constant chemotactic sensitivity χ is not a reasonable assumption once bacterial density gets high.</p>
+                  <p>We first simulated the classical Keller-Segel (KS) model to evaluate its ability to reproduce experimentally observed bacterial distributions across four density regimes (LOW, MID, HIGH, EXT). The experimental data showed a clear density-dependent trend: as initial bacterial density increased, the peak bacterial density at the band front rose sharply, reaching OD approximately 5 in the EXT group, while the aspartate gradient steepened as higher-density populations depleted nutrient more rapidly behind the advancing front.</p>
+                  <p>At low density, the model closely matched the data. The bacterial peak was broad and low-amplitude, and the rate-of-change profiles were small and roughly symmetric, reflecting weak chemotactic flux. As density increased the cracks started to show. At HIGH and EXT densities, the model significantly overestimated both the magnitude and sharpness of the chemotactic response. In the EXT group specifically, the predicted rate-of-change peak was roughly twice the observed value. This makes it clear that constant chemotactic sensitivity is not a reasonable assumption once bacterial density gets high.</p>
                   <div class="result-fig-inline">
-                    <img src="fig2_ks_roc.png" alt="ks_vs_data">
+                    <img src="figures/fig2_ks_roc.png" alt="Rate-of-change diagnostic">
+                    <p class="fig-caption">Rate-of-change diagnostic comparing model prediction against measured data across all four density groups.</p>
                   </div>
                 </div>
               </div>
 
-              <div class="result-block">
+              <div class="result-block-stacked">
                 <div class="result-fig">
-                  <img src="fig3_comparison.png" alt="Density-dependent modification improves agreement across all regimes">
+                  <img src="figures/fig3_comparison.png" alt="Density-dependent modification improves agreement across all regimes">
                 </div>
                 <div class="result-text">
-                  <p class="result-label">Figure 2 </p>
+                  <p class="result-label">Figure 2</p>
                   <h3>Density-dependent modification improves agreement across all regimes</h3>
-                  <p>To fix this, we introduced a density-dependent chemotactic sensitivity χ(B) = χ₀/(1 + B/B_th), alongside a saturating nutrient consumption term. As bacterial density increases, crowding and receptor saturation reduce how strongly individual cells respond to a gradient, and resource uptake becomes limited. This is consistent with what Phan et al. (2024) observed experimentally.</p>
-                  <p>The modification worked well. Across all four density groups, the modified model matched both the amplitude and spatial structure of the measured ∂B/∂t curves. At LOW density the change was minimal — as expected, since corrections are negligible when B ≪ B_th. At EXT density, however, the improvement was substantial: the original model's sharp overshoot was corrected, and the modified model stayed within the experimental standard deviation across the full spatial range (Fig. 3, three-way comparison of original KS, modified KS, and data). A single density-dependent correction to χ was enough to bring the model into agreement across nearly two orders of magnitude in bacterial density.</p>
+                  <p>To fix this, we introduced a density-dependent chemotactic sensitivity alongside a saturating nutrient consumption term. As bacterial density increases, crowding and receptor saturation reduce how strongly individual cells respond to a gradient, and resource uptake becomes limited. This is consistent with what Phan et al. (2024) observed experimentally.</p>
+                  <p>The modification worked well. Across all four density groups, the modified model matched both the amplitude and spatial structure of the measured rate-of-change curves. At LOW density the change was minimal, as expected, since corrections are negligible when density is far below the half-saturation threshold. At EXT density the improvement was substantial: the original model's sharp overshoot was corrected, and the modified model stayed within the experimental standard deviation across the full spatial range. A single density-dependent correction was enough to bring the model into agreement across nearly two orders of magnitude in bacterial density.</p>
                 </div>
               </div>
 
-              <div class="result-block">
+              <div class="result-block-stacked">
                 <div class="result-fig">
-                  <img src="fig4_simulation.png" alt="Simulations reproduce travelling wave propagation and self-generated attractant depletion">
+                  <img src="figures/fig4_simulation.png" alt="Simulations reproduce travelling wave propagation and self-generated attractant depletion">
                 </div>
                 <div class="result-text">
                   <p class="result-label">Figure 3</p>
-                  <h3>imulations reproduce travelling wave propagation and self-generated attractant depletion</h3>
+                  <h3>Simulations reproduce travelling wave propagation and self-generated attractant depletion</h3>
                   <p>Running full time-dependent simulations of the modified model, initialised from LOW-density experimental profiles, reproduced the travelling chemotactic band. Bacteria that were initially broadly distributed aggregated into a moving peak that shifted roughly 2 mm along the z-axis over nine minutes. Behind the band, aspartate was progressively depleted, while a steep gradient was maintained ahead of it. This is a self-generated gradient: the bacteria are not just following a pre-existing chemical field, they are actively shaping it by consuming attractant locally, which sustains the directional bias driving forward motion. Band width and speed were consistent with experimental observations.</p>
                 </div>
               </div>
 
-              <div class="result-block result-block-flip">
+              <div class="result-block-stacked">
                 <div class="result-fig">
-                  <img src="fig_step5_antibiotic_extension.png" alt="Antibiotic extension introduces competing chemotactic signals">
+                  <img src="figures/fig_step5_antibiotic_extension.png" alt="Antibiotic extension introduces competing chemotactic signals">
                 </div>
                 <div class="result-text">
                   <p class="result-label">Figure 4</p>
                   <h3>Antibiotic extension introduces competing chemotactic signals</h3>
-                  <p>We then extended the model to include an antibiotic field A(x,t), with a chemotactic sensitivity term χ_a(A) that only switches on above the minimum inhibitory concentration (MIC), and a killing term that increases with antibiotic exposure. Early on, bacteria behaved as before, which is following the nutrient gradient and forming a travelling band. But as the band reached regions where antibiotic concentration exceeded the MIC, the competing signal took over, pulling bacteria toward the antibiotic source (Fig. 5, time evolution of bacterial density, aspartate, and antibiotic fields with MIC threshold marked). Over ten minutes, the bacterial peak drifted into the high-antibiotic zone, aspartate was simultaneously depleted, and in regions where antibiotics stayed above the MIC, bacterial density collapsed. The antibiotic field itself decayed over time due to bacterial degradation. These simulations capture the core features of suicidal chemotaxis described by Oliveira et al. (2022), and show that a relatively small positive χ_a is enough to redirect population-level movement once the antibiotic gradient becomes steep enough.</p>
+                  <p>We then extended the model to include an antibiotic field, with a chemotactic sensitivity term that only switches on above the minimum inhibitory concentration (MIC), and a killing term that increases with antibiotic exposure. Early on, bacteria behaved as before, following the nutrient gradient and forming a travelling band. But as the band reached regions where antibiotic concentration exceeded the MIC, the competing signal took over, pulling bacteria toward the antibiotic source. Over ten minutes, the bacterial peak drifted into the high-antibiotic zone, aspartate was simultaneously depleted, and in regions where antibiotics stayed above the MIC, bacterial density collapsed. The antibiotic field itself decayed over time due to bacterial degradation. These simulations capture the core features of suicidal chemotaxis described by Oliveira et al. (2022), and show that a relatively small positive antibiotic chemotactic sensitivity is enough to redirect population-level movement once the antibiotic gradient becomes steep enough.</p>
                 </div>
               </div>
 
-             <!-- <div class="result-block">
-                <div class="result-fig">
-                  <img src="fig_ks_toy_band.png" alt="Experimental wave profiles across four density groups">
-                </div>
-                <div class="result-text">
-                  <p class="result-label">Figure 3 - Experimental data</p>
-                  <h3>The real data: band shape changes dramatically with density</h3>
-                  <p>This plot shows the actual measured bacterial density profiles from the Phan et al. experiment. Each panel corresponds to a different starting density: LOW (very few bacteria), MID, HIGH, and EXT (extremely dense). The horizontal axis is position along the channel relative to the centre of the band, and the vertical axis is how many bacteria are at each position.</p>
-                  <p>At LOW density, the profile is a tall, narrow spike. Almost all the bacteria are packed into a very small region, and the edges drop off steeply. At HIGH and EXT density, the profile is short and wide, like a plateau rather than a spike. The bacteria are spread across a much broader region. Crucially, all four bands travel at roughly the same speed of about 0.28 mm per minute, so the speed is not what changes. What changes is the shape. Any model that claims to describe bacterial chemotaxis must reproduce this density-dependent flattening, and that is the central challenge this project addresses.</p>
-                </div>
-              </div>
-
-              <div class="result-block result-block-flip">
-                <div class="result-fig">
-                  <img src="fig2_ks_overlay.png" alt="Original KS model overlay on data">
-                </div>
-                <div class="result-text">
-                  <p class="result-label">Figure 4 - Original model vs data</p>
-                  <h3>The standard model works at low density but gets it wrong at high density</h3>
-                  <p>Here we overlay the original Keller-Segel model prediction (dashed line) on top of the real measured data (solid line) for each density group. At LOW density the two lines sit almost on top of each other, which means the model is doing a good job. But at HIGH and EXT density the model predicts a tall narrow spike while the data shows a wide flat plateau. The model is confidently wrong.</p>
-                  <p>The reason is that the original model assumes every bacterium chases the food gradient with the same strength regardless of how many neighbours it has. In reality, when bacteria are packed tightly together, they interfere with each other and respond less strongly to the gradient. The model has no way to know this, so it over-predicts how sharply the bacteria concentrate.</p>
-                  <p class="fig-caption">The smaller diagnostic plot below checks this more rigorously. It compares the rate at which the bacterial density is actually changing over time (measured directly from the data) against what the model says that rate should be. At LOW density the two match. At HIGH and EXT density the model's predicted rate is several times larger than the measured rate, confirming that the model is driving the chemotaxis far too hard.</p>
-                  <div class="result-fig-inline">
-                    <img src="fig2_ks_roc.png" alt="Rate-of-change diagnostic">
-                  </div>
-                </div>
-              </div>
-
-              <div class="result-block result-block-flip">
-                <div class="result-fig">
-                  <img src="fig4_simulation.png" alt="Forward PDE simulation snapshots">
-                </div>
-                <div class="result-text">
-                  <p class="result-label">Figure 6 - Forward simulation</p>
-                  <h3>The model correctly predicts how the band moves over time</h3>
-                  <p>The previous figures tested the model against a single snapshot in time. Here we go further: we take the real measured bacterial and food profiles as a starting point and let the model run forward for five minutes, then compare the model's prediction to what actually happened in the experiment.</p>
-                  <p>Each panel in the plot shows a different moment in time. The bacterial band (blue) moves steadily to the right at about 0.28 mm per minute, which matches the experimentally measured wave speed. The food profile (orange) develops a deepening trough directly behind the band, because the bacteria consume the food as they pass through. Ahead of the band, the food remains untouched. This asymmetry is what keeps the band moving: there is always more food in front than behind, so the bacteria keep steering forward. The model reproduces this self-sustaining mechanism correctly, giving us confidence that it captures the real physics of the system.</p>
-                </div>
-              </div>--->
-     
               <p>
                 The standard model works at low density but predicts a band that is too narrow and
                 sharp at high density. The rate-of-change diagnostic confirmed the problem: the
-                model's right-hand side was much larger than the measured ∂B/∂t at high density,
+                model's right-hand side was much larger than the measured rate of change at high density,
                 showing the model was over-driving the chemotaxis term.
               </p>
               <p>
-                Replacing constant χ with χ(B) = χ<sub>0</sub> / (1 + B/B<sub>th</sub>) fixed
+                Replacing constant sensitivity with the density-dependent form fixed
                 the model at all four density groups simultaneously. The wide flat band at high
                 density was reproduced, and the narrow sharp band at low density was preserved.
                 One additional parameter unifies behaviour across a 50-fold range of density.
@@ -326,22 +325,22 @@
                 Forward simulation from the real experimental initial conditions reproduced the
                 correct wave speed (~0.28 mm/min) and band shape over five minutes. The aspartate
                 profile evolved as expected, with depletion behind the band and fresh nutrient
-                ahead — the self-sustaining mechanism that drives the travelling wave.
+                ahead, the self-sustaining mechanism that drives the travelling wave.
               </p>
               <p>
                 The antibiotic extension showed that bacteria attracted toward an antibiotic above
                 the MIC enter the killing zone and are eliminated, disrupting the travelling wave.
                 Importantly, dense colonies were harder to disrupt: because crowding already
-                reduces χ(B), high-density bacteria are less strongly attracted to the antibiotic
-                gradient and fewer enter the killing zone. The density-dependent suppression of
-                chemotaxis may therefore inadvertently protect high-density colonies from suicidal
-                antibiotic attraction.
+                reduces chemotactic sensitivity, high-density bacteria are less strongly attracted
+                to the antibiotic gradient and fewer enter the killing zone. The density-dependent
+                suppression of chemotaxis may therefore inadvertently protect high-density colonies
+                from suicidal antibiotic attraction.
               </p>
               <p>
                 These results have implications for gut health. The gut microbiome operates at
                 very high bacterial densities, where our model predicts that chemotactic responses
                 are substantially reduced. This could mean that antibiotic-driven disruption of
-                chemotaxis is density-dependent — potentially explaining why high-density biofilms
+                chemotaxis is density-dependent, potentially explaining why high-density biofilms
                 are harder to treat.
               </p>
 
@@ -353,35 +352,25 @@
                     <span>Result</span><span>Key finding</span>
                   </div>
                   <div class="summary-row">
-                    <span>1 — Model behaviour</span>
-                    <span>The KS model naturally produces a self-sustaining travelling band. The chemotaxis term is the dominant driver.</span>
+                    <span>1 - Original KS model</span>
+                    <span>The standard model works at low density but fails at high density, over-predicting the sharpness of the bacterial band.</span>
                   </div>
                   <div class="summary-row">
-                    <span>2 — Data</span>
-                    <span>The bacterial band gets wider and flatter as density increases, but moves at the same speed in all cases.</span>
+                    <span>2 - Modified model</span>
+                    <span>Making chemotactic sensitivity decrease with crowding fixes the model for all four density groups simultaneously.</span>
                   </div>
                   <div class="summary-row">
-                    <span>3 — Original model</span>
-                    <span>The standard model works at low density but predicts a band that is too narrow and sharp at high density.</span>
+                    <span>3 - Simulation</span>
+                    <span>Running the fixed model forward in time reproduces the correct band shape and wave speed of ~0.28 mm/min.</span>
                   </div>
                   <div class="summary-row">
-                    <span>4 — Fixed model</span>
-                    <span>Making bacteria respond less strongly to food when crowded fixes the model for all four densities at once.</span>
-                  </div>
-                  <div class="summary-row">
-                    <span>5 — Simulation</span>
-                    <span>Running the fixed model forward in time reproduces the correct band shape and movement speed.</span>
-                  </div>
-                  <div class="summary-row">
-                    <span>6 — Antibiotics</span>
-                    <span>When bacteria swim toward antibiotics they get killed and the band breaks down. Dense colonies are harder to disrupt because crowding already reduces their response to any gradient.</span>
+                    <span>4 - Antibiotics</span>
+                    <span>When bacteria swim toward antibiotics they get killed and the band breaks down. Dense colonies are harder to disrupt because crowding already reduces their chemotactic response.</span>
                   </div>
                 </div>
               </div>
 
             </article>
-
-            <article id="refs" class="report-section">
               <h3>References</h3>
               <ol class="ref-list">
                 <li>Phan, T. V. et al. (2024). Bacterial density-dependent chemotaxis in a microfluidic channel. <em>Physical Review Letters</em>.</li>
@@ -488,7 +477,7 @@
         </div>
         <div class="media-grid">
           <div class="media-frame">
-            <img src="step5_2d_chemotaxis.gif" alt="2D chemotaxis animation with bacteria, food, and antibiotic">
+            <img src="figures/step5_2d_chemotaxis.gif" alt="2D chemotaxis animation with bacteria, food, and antibiotic">
           </div>
           <div class="media-copy">
             <p>The animation on the left comes from the Step 5 particle-field model. Food is shown in green, antibiotic in purple, and bacteria as moving dots.</p>
