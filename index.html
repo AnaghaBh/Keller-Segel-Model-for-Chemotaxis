@@ -85,118 +85,172 @@
               </p>
             </article>
 
-           <article id="model" class="report-section">
-              <h3>Model</h3>
-
-              <h4>State variables</h4>
-              <p>
-                The model tracks two fields as functions of position z (mm) and time t (s).
-                The coordinate z is in the co-moving frame, so z = 0 always marks the peak of
-                the bacterial band. Negative z is behind the band (depleted food), positive z
-                is ahead (fresh food).
-              </p>
-
+           <article class="report-section">
+              <h3>Equations Reference</h3>
+              <p>This section explains every equation used in the model, term by term.</p>
+              
+              <hr>
+              
+              <h4>State Variables</h4>
+              
               <table class="styled-table">
-                <tr><th>Symbol</th><th>Units</th><th>Meaning</th></tr>
-                <tr><td>B(z,t)</td><td>OD</td><td>Bacterial density</td></tr>
-                <tr><td>A(z,t)</td><td>µM</td><td>Aspartate concentration</td></tr>
-                <tr><td>C(z,t)</td><td>µM</td><td>Antibiotic concentration</td></tr>
+              <thead>
+              <tr><th>Symbol</th><th>Units</th><th>Meaning</th></tr>
+              </thead>
+              <tbody>
+              <tr><td><code>B(z,t)</code></td><td>OD</td><td>Bacterial density at position z and time t.</td></tr>
+              <tr><td><code>A(z,t)</code></td><td>µM</td><td>Aspartate concentration (food).</td></tr>
+              <tr><td><code>C(z,t)</code></td><td>µM</td><td>Antibiotic concentration.</td></tr>
+              <tr><td><code>z</code></td><td>mm</td><td>Position along channel (co-moving frame).</td></tr>
+              <tr><td><code>t</code></td><td>s</td><td>Time.</td></tr>
+              </tbody>
               </table>
-
-              <h4>The perceived signal</h4>
-              <p>
-                Bacteria respond to a logarithmic transformation of the aspartate concentration.
-              </p>
-
+              
+              <hr>
+              
+              <h4>The Perceived Signal Φ</h4>
+              
               <div class="equation-block">
-                <p>Φ<sub>A</sub> = ln(1 + A / K<sub>i</sub>)</p>
+              <p>Φ<sub>A</sub> = ln(1 + A / K<sub>i</sub>)</p>
               </div>
-
+              
               <table class="styled-table">
-                <tr><th>Term</th><th>Units</th><th>Meaning</th></tr>
-                <tr><td>Φ<sub>A</sub></td><td>—</td><td>Perceived signal</td></tr>
-                <tr><td>K<sub>i</sub></td><td>µM</td><td>Signal threshold (1.0 µM)</td></tr>
+              <thead>
+              <tr><th>Term</th><th>Units</th><th>Meaning</th></tr>
+              </thead>
+              <tbody>
+              <tr><td>Φ<sub>A</sub></td><td>—</td><td>Perceived signal</td></tr>
+              <tr><td>A</td><td>µM</td><td>Aspartate concentration</td></tr>
+              <tr><td>K<sub>i</sub></td><td>µM</td><td>Signal threshold</td></tr>
+              <tr><td>ln</td><td>—</td><td>Logarithmic response</td></tr>
+              </tbody>
               </table>
-
-              <h4>The original Keller–Segel equations</h4>
-
+              
               <div class="equation-block">
-                <p>∂B/∂t = D<sub>b</sub> ∂²B/∂z² − ∂/∂z [χ B ∂Φ<sub>A</sub>/∂z] + αB</p>
+              <p>dΦ<sub>A</sub>/dz = (1 / (1 + A/K<sub>i</sub>)) · (1/K<sub>i</sub>) · (dA/dz)</p>
               </div>
-
+              
+              <p>This means bacteria respond less strongly at high background concentrations.</p>
+              
+              <hr>
+              
+              <h4>Step 2: Original Keller–Segel Model</h4>
+              
+              <div class="equation-block">
+              <p>∂B/∂t = D<sub>b</sub> ∂²B/∂z² − ∂/∂z [χ B ∂Φ<sub>A</sub>/∂z] + αB</p>
+              </div>
+              
               <h5>Diffusion</h5>
+              
+              <div class="equation-block">
+              <p>D<sub>b</sub> ∂²B/∂z²</p>
+              </div>
+              
               <table class="styled-table">
-                <tr><th>Symbol</th><th>Value</th><th>Units</th><th>Meaning</th></tr>
-                <tr><td>D<sub>b</sub></td><td>0.0004</td><td>mm²/s</td><td>Bacterial diffusion</td></tr>
+              <tr><th>Symbol</th><th>Value</th><th>Units</th><th>Meaning</th></tr>
+              <tr><td>D<sub>b</sub></td><td>0.0004</td><td>mm²/s</td><td>Bacterial diffusion</td></tr>
+              <tr><td>∂²B/∂z²</td><td>—</td><td>OD/mm²</td><td>Curvature of density</td></tr>
               </table>
-
+              
               <h5>Chemotaxis</h5>
+              
+              <div class="equation-block">
+              <p>− ∂/∂z [χ B ∂Φ<sub>A</sub>/∂z]</p>
+              </div>
+              
               <table class="styled-table">
-                <tr><th>Symbol</th><th>Value</th><th>Units</th><th>Meaning</th></tr>
-                <tr><td>χ</td><td>0.0033</td><td>mm²/s</td><td>Chemotactic sensitivity</td></tr>
+              <tr><th>Symbol</th><th>Value</th><th>Units</th><th>Meaning</th></tr>
+              <tr><td>χ</td><td>0.0033</td><td>mm²/s</td><td>Chemotactic sensitivity</td></tr>
+              <tr><td>B</td><td>—</td><td>OD</td><td>Bacterial density</td></tr>
+              <tr><td>∂Φ/∂z</td><td>—</td><td>1/mm</td><td>Gradient direction</td></tr>
               </table>
-
+              
               <h5>Growth</h5>
+              
+              <div class="equation-block">
+              <p>αB</p>
+              </div>
+              
               <table class="styled-table">
-                <tr><th>Symbol</th><th>Value</th><th>Units</th><th>Meaning</th></tr>
-                <tr><td>α</td><td>1.11×10⁻⁴</td><td>s⁻¹</td><td>Growth rate</td></tr>
+              <tr><th>Symbol</th><th>Value</th><th>Units</th><th>Meaning</th></tr>
+              <tr><td>α</td><td>1.11×10⁻⁴</td><td>s⁻¹</td><td>Growth rate</td></tr>
               </table>
-
+              
+              <hr>
+              
+              <h4>Aspartate Equation</h4>
+              
               <div class="equation-block">
-                <p>∂A/∂t = D<sub>A</sub> ∂²A/∂z² − γ B A / (A + A<sub>th</sub>)</p>
+              <p>∂A/∂t = D<sub>A</sub> ∂²A/∂z² − γ B A/(A + A<sub>th</sub>)</p>
               </div>
-
+              
               <table class="styled-table">
-                <tr><th>Symbol</th><th>Value</th><th>Units</th><th>Meaning</th></tr>
-                <tr><td>D<sub>A</sub></td><td>0.00080</td><td>mm²/s</td><td>Aspartate diffusion</td></tr>
-                <tr><td>γ</td><td>0.51</td><td>µM/(OD·s)</td><td>Consumption rate</td></tr>
-                <tr><td>A<sub>th</sub></td><td>7.6</td><td>µM</td><td>Saturation constant</td></tr>
+              <tr><th>Symbol</th><th>Value</th><th>Units</th><th>Meaning</th></tr>
+              <tr><td>D<sub>A</sub></td><td>0.00080</td><td>mm²/s</td><td>Diffusion</td></tr>
+              <tr><td>γ</td><td>0.51</td><td>µM/(OD·s)</td><td>Consumption rate</td></tr>
+              <tr><td>A<sub>th</sub></td><td>7.6</td><td>µM</td><td>Saturation constant</td></tr>
               </table>
-
-              <h4>Density-dependent correction (Phan et al. 2024)</h4>
-
+              
+              <hr>
+              
+              <h4>Step 3: Density-Dependent Chemotaxis</h4>
+              
               <div class="equation-block">
-                <p>χ(B) = χ₀ / (1 + B / B<sub>h</sub>)</p>
+              <p>χ(B) = χ₀ / (1 + B / B<sub>h</sub>)</p>
               </div>
-
+              
               <table class="styled-table">
-                <tr><th>Symbol</th><th>Value</th><th>Units</th><th>Meaning</th></tr>
-                <tr><td>χ₀</td><td>0.0038</td><td>mm²/s</td><td>Maximum sensitivity</td></tr>
-                <tr><td>B<sub>h</sub></td><td>6.8</td><td>OD</td><td>Half-saturation density</td></tr>
+              <tr><th>Symbol</th><th>Value</th><th>Units</th><th>Meaning</th></tr>
+              <tr><td>χ₀</td><td>0.0038</td><td>mm²/s</td><td>Maximum sensitivity</td></tr>
+              <tr><td>B<sub>h</sub></td><td>6.8</td><td>OD</td><td>Half-saturation density</td></tr>
               </table>
-
+              
               <div class="equation-block">
-                <p>γ(B) = γ₀ / (1 + B / B<sub>c</sub>)</p>
+              <p>γ(B) = γ₀ / (1 + B / B<sub>c</sub>)</p>
               </div>
-
-              <h4>Antibiotic extension (our Step 5)</h4>
-
+              
+              <hr>
+              
+              <h4>Step 5: Antibiotic Extension</h4>
+              
               <div class="equation-block">
-                <p>H(C) = Cⁿ / (Cⁿ + MICⁿ)</p>
+              <p>Φ<sub>C</sub> = ln(1 + C / K<sub>c</sub>)</p>
               </div>
-
+              
+              <div class="equation-block">
+              <p>H(C) = Cⁿ / (Cⁿ + MICⁿ)</p>
+              </div>
+              
               <table class="styled-table">
-                <tr><th>Symbol</th><th>Value</th><th>Units</th><th>Meaning</th></tr>
-                <tr><td>MIC</td><td>0.70</td><td>µM</td><td>Threshold</td></tr>
-                <tr><td>n</td><td>4</td><td>—</td><td>Hill coefficient</td></tr>
+              <tr><th>Symbol</th><th>Value</th><th>Units</th><th>Meaning</th></tr>
+              <tr><td>MIC</td><td>0.70</td><td>µM</td><td>Threshold</td></tr>
+              <tr><td>n</td><td>4</td><td>—</td><td>Hill coefficient</td></tr>
               </table>
-
+              
               <div class="equation-block">
-                <p>∂C/∂t = D<sub>C</sub> ∂²C/∂z² − κ B C</p>
+              <p>μ(C) = μ<sub>max</sub> H(C) C/(C + MIC)</p>
               </div>
-
-              <h4>Numerical implementation</h4>
-
+              
               <div class="equation-block">
-                <p>dt &lt; dz² / (2D)</p>
+              <p>∂C/∂t = D<sub>C</sub> ∂²C/∂z² − κBC</p>
               </div>
-
+              
+              <hr>
+              
+              <h4>Numerical Method</h4>
+              
               <p>
-                The PDEs are solved using explicit Euler time-stepping with central finite
-                differences on a 300-point grid, with no-flux boundary conditions.
+              The PDEs are solved using explicit Euler time-stepping with central finite differences.
+              Grid size: N = 300, dz ≈ 0.02 mm.
               </p>
-
-            </article>
+              
+              <div class="equation-block">
+              <p>dt &lt; dz² / (2 · max(D<sub>b</sub>, D<sub>A</sub>))</p>
+              </div>
+              
+              <p>No-flux boundary conditions are applied at both ends.</p>
+              
+              </article>
             <article id="report-methods" class="report-section">
               <h3>Methods</h3>
 
