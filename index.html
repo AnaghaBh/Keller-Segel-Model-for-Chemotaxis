@@ -367,8 +367,9 @@
                       <button id="resetButton" class="button primary">Reset Simulation</button>
                       <button id="pauseButton" class="button primary">Pause</button>
                     </div>
-                    <div class="formula-note">
-                      <h3>Browser model</h3>
+                  </aside>
+                  <div class="formula-note">
+                      <h3>Simulation Model</h3>
                       <p>We developed an interactive, browser-based simulation that allows real-time variation of key parameters, including food attraction (χ_f), antibiotic attraction (χ_a), antibiotic-induced death rate, MIC threshold, and initial bacterial density (model).
                       <p>Across simulations, three distinct regimes emerged depending on the relative strength of attraction and toxicity.</p>
                       <p>At low antibiotic attraction and/or high death rates, bacterial populations remained confined to nutrient-rich regions. Cells aggregated into stable clusters around food sources, with minimal penetration into antibiotic zones. The MIC contour acted as a soft exclusion boundary, beyond which population density remained negligible.</p>
@@ -377,7 +378,6 @@
                       <p>In addition, increasing the initial population size enhanced aggregation strength and accelerated migration toward both nutrient and antibiotic sources. However, higher densities also amplified effective exposure to antibiotics near the MIC boundary, leading to sharper population declines in collapse regimes. 
                       </p>
                     </div>
-                  </aside>
                   <div class="canvas-wrap">
                     <canvas id="chemotaxisCanvas" width="900" height="580"></canvas>
                     <div class="canvas-overlay">
