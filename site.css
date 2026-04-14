@@ -455,9 +455,32 @@ button.ghost {
 }
 
 .formula-note {
-  padding-top: 10px;
-  border-top: 1px solid var(--line);
+  margin-top: 32px;
+  padding: 32px;
+  border-radius: 24px;
+  background: var(--panel-strong);
+  border: 1px solid rgba(13, 27, 42, 0.08);
+  box-shadow: var(--shadow);
   color: var(--muted);
+}
+
+.formula-note h3 {
+  margin: 0 0 16px;
+  font-family: "Fraunces", serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.formula-note p {
+  margin: 0 0 14px;
+  font-size: 1rem;
+  line-height: 1.75;
+  max-width: 90ch;
+}
+
+.formula-note p:last-child {
+  margin-bottom: 0;
 }
 
 .canvas-wrap {
