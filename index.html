@@ -165,7 +165,7 @@
                   <p>We first simulated the classical Keller-Segel (KS) model to evaluate its ability to reproduce experimentally observed bacterial distributions across four density regimes (LOW, MID, HIGH, EXT). The experimental data showed a clear density-dependent trend: as initial bacterial density increased, the peak bacterial density at the band front rose sharply, reaching OD ≈ 5 in the EXT group, while the aspartate gradient steepened as higher-density populations depleted nutrient more rapidly behind the advancing front .</p>
                   <p>At low density, the model closely matched the data - the bacterial peak was broad and low-amplitude, and the rate-of-change profiles (∂B/∂t) were small and roughly symmetric, reflecting weak chemotactic flux. As density increased, though, the cracks started to show. At HIGH and EXT densities, the model significantly overestimated both the magnitude and sharpness of the chemotactic response. In the EXT group specifically, the predicted ∂B/∂t peak was roughly twice the observed value, and the spatial profile was much broader than what the data showed. This makes it clear that constant chemotactic sensitivity χ is not a reasonable assumption once bacterial density gets high.</p>
                   <div class="result-fig-inline">
-                    <img src="figures/fig2_ks_roc.png" alt="ks_vs_data">
+                    <img src="fig2_ks_roc.png" alt="ks_vs_data">
                   </div>
                 </div>
               </div>
@@ -184,7 +184,7 @@
 
               <div class="result-block">
                 <div class="result-fig">
-                  <img src="figures/fig4_simulation.png" alt="imulations reproduce travelling wave propagation and self-generated attractant depletion">
+                  <img src="fig4_simulation.png" alt="imulations reproduce travelling wave propagation and self-generated attractant depletion">
                 </div>
                 <div class="result-text">
                   <p class="result-label">Figure 3</p>
@@ -206,7 +206,7 @@
 
              <!-- <div class="result-block">
                 <div class="result-fig">
-                  <img src="figures/fig_ks_toy_band.png" alt="Experimental wave profiles across four density groups">
+                  <img src="fig_ks_toy_band.png" alt="Experimental wave profiles across four density groups">
                 </div>
                 <div class="result-text">
                   <p class="result-label">Figure 3 - Experimental data</p>
@@ -218,7 +218,7 @@
 
               <div class="result-block result-block-flip">
                 <div class="result-fig">
-                  <img src="figures/fig2_ks_overlay.png" alt="Original KS model overlay on data">
+                  <img src="fig2_ks_overlay.png" alt="Original KS model overlay on data">
                 </div>
                 <div class="result-text">
                   <p class="result-label">Figure 4 - Original model vs data</p>
@@ -227,14 +227,14 @@
                   <p>The reason is that the original model assumes every bacterium chases the food gradient with the same strength regardless of how many neighbours it has. In reality, when bacteria are packed tightly together, they interfere with each other and respond less strongly to the gradient. The model has no way to know this, so it over-predicts how sharply the bacteria concentrate.</p>
                   <p class="fig-caption">The smaller diagnostic plot below checks this more rigorously. It compares the rate at which the bacterial density is actually changing over time (measured directly from the data) against what the model says that rate should be. At LOW density the two match. At HIGH and EXT density the model's predicted rate is several times larger than the measured rate, confirming that the model is driving the chemotaxis far too hard.</p>
                   <div class="result-fig-inline">
-                    <img src="figures/fig2_ks_roc.png" alt="Rate-of-change diagnostic">
+                    <img src="fig2_ks_roc.png" alt="Rate-of-change diagnostic">
                   </div>
                 </div>
               </div>
 
               <div class="result-block result-block-flip">
                 <div class="result-fig">
-                  <img src="figures/fig4_simulation.png" alt="Forward PDE simulation snapshots">
+                  <img src="fig4_simulation.png" alt="Forward PDE simulation snapshots">
                 </div>
                 <div class="result-text">
                   <p class="result-label">Figure 6 - Forward simulation</p>
@@ -422,7 +422,7 @@
         </div>
         <div class="media-grid">
           <div class="media-frame">
-            <img src="figures/step5_2d_chemotaxis.gif" alt="2D chemotaxis animation with bacteria, food, and antibiotic">
+            <img src="step5_2d_chemotaxis.gif" alt="2D chemotaxis animation with bacteria, food, and antibiotic">
           </div>
           <div class="media-copy">
             <p>The animation on the left comes from the Step 5 particle-field model. Food is shown in green, antibiotic in purple, and bacteria as moving dots.</p>
