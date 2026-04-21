@@ -1,4 +1,4 @@
-# Computational Biology Project
+# Keller Segel Model for Chemotaxis with an Antibiotic addition
 
 ## Overview
 This project explores the fascinating field of bacterial chemotaxis, focusing on Keller-Segel models and the complex behaviors of bacteria when influenced by antibiotics. The primary goal of this research is to understand bacterial movement in response to external stimuli and the implications for antibiotic treatment.
